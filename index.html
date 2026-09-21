@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RYANS ATM</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #071a35, #0e4c6f);
+    }
+
+    .atm {
+      width: min(420px, 92vw);
+      padding: 30px;
+      border-radius: 22px;
+      background: #17233b;
+      color: white;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
+      text-align: center;
+    }
+
+    .logo {
+      color: #57e3b7;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .screen {
+      margin: 25px 0;
+      padding: 22px;
+      border-radius: 12px;
+      background: #b8f2cf;
+      color: #10251b;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 2px solid #6fcf97;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #20b486;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #168c67;
+      transform: translateY(-2px);
+    }
+
+    .menu {
+      display: grid;
+      gap: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .message {
+      font-weight: bold;
+      min-height: 20px;
+    }
+
+    .balance {
+      font-size: 25px;
+      color: #087f5b;
+      font-weight: bold;
+    }
+
+    .footer {
+      color: #a9b6cc;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="atm">
+    <div class="logo">💳 RYANS ATM</div>
+    <p class="footer">Secure Banking System</p>
+
+    <!-- PIN Screen -->
+    <section class="screen" id="pinScreen">
+      <h2>Welcome</h2>
+      <p>Please enter your PIN</p>
+      <input type="password" id="pinInput" maxlength="4" placeholder="Enter 4-digit PIN" />
+      <button onclick="checkPin()">Login</button>
+      <p class="message" id="pinMessage"></p>
+    </section>
+
+    <!-- ATM Menu Screen -->
+    <section class="screen hidden" id="atmScreen">
+      <h2>ATM Menu</h2>
+      <p class="message" id="message">Choose a transaction.</p>
+
+      <div class="menu">
+        <button onclick="checkBalance()">💰 Check Balance</button>
+        <button onclick="withdraw()">💸 Withdraw Money</button>
+        <button onclick="deposit()">➕ Deposit Money</button>
+        <button onclick="exitATM()">🚪 Exit</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const correctPin = "1234";
+    let balance = 10000;
+
+    function checkPin() {
+      const enteredPin = document.getElementById("pinInput").value;
+      const pinMessage = document.getElementById("pinMessage");
+
+      if (enteredPin === correctPin) {
+        document.getElementById("pinScreen").classList.add("hidden");
+        document.getElementById("atmScreen").classList.remove("hidden");
+      } else {
+        pinMessage.textContent = "❌ Incorrect PIN. Try again.";
+        pinMessage.style.color = "red";
+      }
+    }
+
+    function checkBalance() {
+      document.getElementById("message").innerHTML =
+        `Your balance is:<br><span class="balance">₦${balance.toLocaleString()}</span>`;
+    }
+
+    function withdraw() {
+      const amount = Number(prompt("Enter withdrawal amount:"));
+
+      if (amount <= 0 || isNaN(amount)) {
+        showMessage("❌ Enter a valid amount.");
+      } else if (amount > balance) {
+        showMessage("❌ Insufficient balance.");
+      } else {
+        balance -= amount;
+        showMessage(`✅ Withdrawal successful! New balance: ₦${balance.toLocaleString()}`);
+      }
+    }
+
+    function deposit() {
+      const amount = Number(prompt("Enter deposit amount:"));
+
+      if (amount <= 0 || isNaN(amount)) {
+        showMessage("❌ Enter a valid amount.");
+      } else {
+        balance += amount;
+        showMessage(`✅ Deposit successful! New balance: ₦${balance.toLocaleString()}`);
+      }
+    }
+
+    function exitATM() {
+      document.getElementById("atmScreen").classList.add("hidden");
+      document.getElementById("pinScreen").classList.remove("hidden");
+      document.getElementById("pinInput").value = "";
+      document.getElementById("pinMessage").textContent = "👋 Thank you for using RYANS ATM.";
+      document.getElementById("pinMessage").style.color = "green";
+    }
+
+    function showMessage(text) {
+      document.getElementById("message").textContent = text;
+    }
+  </script>
+</body>
+</html>
